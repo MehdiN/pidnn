@@ -1,3 +1,8 @@
+import numpy as np
+from numpy import array
+import pdb
+
+
 class PIDNN(object):
     '''A PID Neural Network Controller Class
 
@@ -14,6 +19,7 @@ class PIDNN(object):
     def __init__(self, learning_rate, state_vector_dim):
         self.learning_rate = learning_rate
         self.dim_state = state_vector_dim
+        self.loss = 10
         self.W1 = {}
         self.W2 = np.zeros((self.dim_state, 1))
         self.I = {}
@@ -36,7 +42,7 @@ class PIDNN(object):
 
     # Activation functions
 
-    def p_neuron(self, v):
+    def p_neuron(self,v):
         """
         P Neuron Activation Function
 
@@ -47,7 +53,7 @@ class PIDNN(object):
             v = v / np.fabs(v)
         return v
 
-    def i_neuron(self, v, I):
+    def i_neuron(self,v, I):
         """
         I Neuron Activation Function
 
@@ -60,7 +66,7 @@ class PIDNN(object):
             v = v + I
         return v
 
-    def d_neuron(self, v, D):
+    def d_neuron(self,v, D):
         """
         D Neuron Activation Function
 
@@ -73,7 +79,7 @@ class PIDNN(object):
             v = v - D
         return v
 
-    def neuron_back(self, z):
+    def neuron_back(self,z):
         """
         Derivative function for backpropagation computation
 
@@ -147,10 +153,9 @@ class PIDNN(object):
     def compute_cost(self, r, y):
         """
         Compute the cost of each pass
-
+        ...
         """
-        loss = 0.5 * np.dot((r - y).T, r - y)
-        return loss
+        self.loss = 0.5 * np.dot((r - y).T, r - y)
 
     def backward_pass_1(self, Y):
         """
@@ -174,7 +179,7 @@ class PIDNN(object):
         dW2 = np.dot(dZ2, A1.T)
         return dW2
 
-    def backward_pass_2(self, x, y):
+    def backward_pass_2(self,x, y):
         """
         Second backward pass function
 
@@ -199,20 +204,18 @@ class PIDNN(object):
             dW1["dW1" + str(i)] = np.dot(dZ1[i:i + 3], X.T)
         return dW1
 
-    def update_weights(self, dW1, dW2):
+    def update_weights(self,dW1, dW2):
         """
         Gradient descent update step
 
         ...
         Input:
 
-        W1,W1: weight
         dW1,dW2: gradient weight
         """
         self.W2 += -1.0 * learning_rate * dW2
         for i in range(self.dim_state):
-            self.W1["W1" + str(i)] += -1.0 * \
-                learning_rate * dW1["dW1" + str(i)]
+            self.W1["W1" + str(i)] += -1.0 * learning_rate * dW1["dW1" + str(i)]
 
     def feedforward(self, x, y):
         # FeedFoward
