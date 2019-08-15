@@ -1,10 +1,10 @@
-# pidnn
+# PIDNN
 
 A PID Neural Network for Non Linear Control
 
 
 
-References:
+## References:
 
 [1] *An adaptive PID neural network for complex nonlinear system control* Jun Kanga, Wenjun Menga, Ajith Abrahamc, Hongbo Liuc
 
